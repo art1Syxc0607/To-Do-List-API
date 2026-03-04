@@ -5,8 +5,8 @@ namespace DataAccess;
 
 public class AppContext(DbContextOptions<AppContext> options) : DbContext(options)
 {
-    DbSet<User> users {  get; set; }  
-    DbSet<TaskTo> tasks {  get; set; }
+    public DbSet<User> Users {  get; set; }
+    public DbSet<TaskTo> Tasks {  get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
