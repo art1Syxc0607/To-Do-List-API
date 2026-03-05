@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BusinessLogic.Interfaces;
+﻿using BusinessLogic.Interfaces;
 using DataAccess.Entities;
 using DataAccess.Repositories;
+using BusinessLogic.Services.Jwt;
 
 namespace BusinessLogic.Services
 {
     public class AuthService : IAuthService
     {
         public IUserRepository _userRepository;
+        private readonly IJwtService _jwtService;
 
-        public AuthService(IUserRepository personRepository)
+        public AuthService(IUserRepository personRepository, IJwtService jwtService )
         {
             _userRepository = personRepository;
+            _jwtService = jwtService;
         }
         public async Task<AuthResult> RegisterAsync(string email, string password)
         {
@@ -27,9 +25,19 @@ namespace BusinessLogic.Services
             // 2. Хешируем пароль
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
 
-            //var user = new User
+            // 3. Создаем пользователя
+            var user = new User
+            {
+                Email = email,
+                PasswordHash = passwordHash,
+                CreatedAt = DateTime.UtcNow
+            };
 
-            //await _userRepository.CreateAsync(user);
+            await _userRepository.CreateAsync(user);
+
+            var token = _jwtService.GenerateToken(user.Email, user.Id);
+
+            return AuthResult.SuccessResult(token, user.Id, user.Email);
         }
 
         //public Task<AuthResult> LoginAsync(string email, string password)

@@ -11,4 +11,8 @@
     <Folder Include="DTO\Tasks\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
+  </ItemGroup>
+
 </Project>

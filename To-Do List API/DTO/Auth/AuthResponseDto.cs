@@ -1,0 +1,10 @@
+﻿namespace To_Do_List_API.DTO.Auth
+{
+    public class AuthResponseDto
+    {
+        public string Token { get; set; }
+        public int UserId { get; set; }
+        public string EmailLogin { get; set; }
+        public int ExpiresIn { get; set; } = 3600;
+    }
+}
