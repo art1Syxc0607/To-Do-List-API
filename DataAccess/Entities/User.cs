@@ -9,5 +9,7 @@
 
         public DateTime CreatedAt { get; set; }
 
+
+        public List<UserTask>? Tasks { get; set; }
     }
 }
