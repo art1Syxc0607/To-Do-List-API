@@ -42,6 +42,11 @@ public class PersonController(IAuthService authService) : ControllerBase
     }
 
 
+    [HttpPost("login")]
+    async public Task<IActionResult> Login(LoginDto loginDto)
+    {
+
+    }
 
 }
 

@@ -1,7 +1,8 @@
 ﻿using BusinessLogic.Interfaces;
+using BusinessLogic.Services.Jwt;
 using DataAccess.Entities;
 using DataAccess.Repositories;
-using BusinessLogic.Services.Jwt;
+using System;
 
 namespace BusinessLogic.Services
 {
@@ -40,9 +41,17 @@ namespace BusinessLogic.Services
             return AuthResult.SuccessResult(token, user.Id, user.Email);
         }
 
-        //public Task<AuthResult> LoginAsync(string email, string password)
-        //{
+        public async Task<AuthResult> LoginAsync(string email, string password)
+        {
+            // 1. Ищем пользователя
+            var user = await _userRepository.GetByEmailAsync(email);
+            if(user == null)
+                return AuthResult.ErrorResult("Неверный логин или пароль");
 
-        //}
+            // 2. Проверяем пароль
+            bool isValid = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+            if (!isValid)
+                return AuthResult.ErrorResult("Неверный логин или пароль");
+        }
     }
 }
