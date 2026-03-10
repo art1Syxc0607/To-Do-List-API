@@ -11,12 +11,12 @@ namespace BusinessLogic.Services.Jwt;
 public class JwtService : IJwtService
 {
 
-    public string GenerateToken(string email, int id)
+    public string GenerateToken(string email, string username, int id)
     {
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Email, email),
-            new Claim(ClaimTypes.Name, email),
+            new Claim(ClaimTypes.Name, username),
             new Claim("personId", id.ToString())
         };
 

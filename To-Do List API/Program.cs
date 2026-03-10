@@ -28,7 +28,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) // "B
 
 // 2. Добавляем авторизацию
 builder.Services.AddAuthorization();
-builder.Services.AddDataAccess();
+builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddBusinessLogic();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

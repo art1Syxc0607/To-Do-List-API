@@ -16,12 +16,15 @@ namespace BusinessLogic.Services
             _userRepository = personRepository;
             _jwtService = jwtService;
         }
-        public async Task<AuthResult> RegisterAsync(string email, string password)
+        public async Task<AuthResult> RegisterAsync(string email, string password, string username)
         {
             // 1. Проверяем, есть ли уже такой пользователь
             var existingPerson = await _userRepository.GetByEmailAsync(email);
             if (existingPerson != null)
                 return AuthResult.ErrorResult("Пользователь уже существует");
+
+            if(await _userRepository.GetByUserNameAsync(username) != null)
+                return AuthResult.ErrorResult("Такое имя пользователя уже используется");
 
             // 2. Хешируем пароль
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
@@ -31,14 +34,15 @@ namespace BusinessLogic.Services
             {
                 Email = email,
                 PasswordHash = passwordHash,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                UserName = username,
             };
 
             await _userRepository.CreateAsync(user);
 
-            var token = _jwtService.GenerateToken(user.Email, user.Id);
+            var token = _jwtService.GenerateToken(user.Email, user.UserName, user.Id);
 
-            return AuthResult.SuccessResult(token, user.Id, user.Email);
+            return AuthResult.SuccessResult(token, user.Id, user.Email, user.UserName);
         }
 
         public async Task<AuthResult> LoginAsync(string email, string password)
@@ -52,6 +56,11 @@ namespace BusinessLogic.Services
             bool isValid = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
             if (!isValid)
                 return AuthResult.ErrorResult("Неверный логин или пароль");
+
+            var token = _jwtService.GenerateToken(user.Email, user.UserName, user.Id);
+
+            return AuthResult.SuccessResult(token, user.Id, user.Email, user.UserName);
+
         }
     }
 }

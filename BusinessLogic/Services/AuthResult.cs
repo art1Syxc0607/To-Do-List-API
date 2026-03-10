@@ -5,17 +5,18 @@ public class AuthResult
     public string Error { get; set; }
     public string Token { get; set; }
     public int UserId { get; set; }
-    public string Email_login { get; set; }
+    public string Email { get; set; }
+    public string UserName { get; set; }
 
 
-    public static AuthResult SuccessResult(string token, int userId, string email_login) =>
+    public static AuthResult SuccessResult(string token, int userId, string email, string username) =>
         new()
         {
             Success = true,
             Token = token,
             UserId = userId,
-            Email_login = email_login,
-
+            Email = email,
+            UserName = username
         };
 
     public static AuthResult ErrorResult(string error) =>

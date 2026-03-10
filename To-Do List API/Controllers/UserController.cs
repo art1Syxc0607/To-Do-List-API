@@ -19,7 +19,7 @@ public class PersonController(IAuthService authService) : ControllerBase
     [HttpPost("register")]
     async public Task<IActionResult> Register(RegisterDto regDto)
     {
-        var result = await authService.RegisterAsync(regDto.Email, regDto.Password);
+        var result = await authService.RegisterAsync(regDto.Email, regDto.Password, regDto.Username);
 
         // Проверяем флаг успеха
         if (!result.Success)
@@ -33,7 +33,8 @@ public class PersonController(IAuthService authService) : ControllerBase
         {
             Token = result.Token,
             UserId = result.UserId,
-            EmailLogin = result.Email_login,
+            Email = result.Email,
+            UserName = result.UserName,
             ExpiresIn = 3600
         };
 
@@ -45,6 +46,25 @@ public class PersonController(IAuthService authService) : ControllerBase
     [HttpPost("login")]
     async public Task<IActionResult> Login(LoginDto loginDto)
     {
+        var result = await authService.LoginAsync(loginDto.Email, loginDto.Password);
+
+        // Проверяем флаг успеха
+        if (!result.Success)
+        {
+            // Возвращаем 400 Bad Request с описанием ошибки
+            return BadRequest(new { error = result.Error });
+        }
+
+        var response = new AuthResponseDto
+        {
+            Token = result.Token,
+            UserId = result.UserId,
+            Email = result.Email,
+            UserName = result.UserName,
+            ExpiresIn = 3600
+        };
+
+        return Ok(response);
 
     }
 

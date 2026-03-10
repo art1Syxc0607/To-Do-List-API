@@ -23,5 +23,10 @@ namespace DataAccess.Repositories
             _context.Users.Add(person);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<User?> GetByUserNameAsync(string username)
+        {
+            return await _context.Users.FirstOrDefaultAsync(p => p.UserName == username);
+        }
     }
 }
