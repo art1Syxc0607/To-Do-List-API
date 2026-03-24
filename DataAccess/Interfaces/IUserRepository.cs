@@ -1,8 +1,7 @@
-﻿
-using DataAccess.Entities;
+﻿using DataAccess.Entities;
 using System;
 
-namespace DataAccess.Repositories
+namespace DataAccess.Interfaces
 {
     public interface IUserRepository
     {

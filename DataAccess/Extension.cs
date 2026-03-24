@@ -1,4 +1,5 @@
-﻿using DataAccess.Repositories;
+﻿using DataAccess.Interfaces;
+using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;          // Для UseSqlite и DbContextOptionsBuilder
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

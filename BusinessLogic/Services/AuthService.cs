@@ -1,14 +1,14 @@
 ﻿using BusinessLogic.Interfaces;
 using BusinessLogic.Services.Jwt;
 using DataAccess.Entities;
-using DataAccess.Repositories;
+using DataAccess.Interfaces;
 using System;
 
 namespace BusinessLogic.Services
 {
     public class AuthService : IAuthService
     {
-        public IUserRepository _userRepository;
+        private IUserRepository _userRepository;
         private readonly IJwtService _jwtService;
 
         public AuthService(IUserRepository personRepository, IJwtService jwtService )
