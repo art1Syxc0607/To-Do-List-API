@@ -31,5 +31,20 @@ public class TaskController(ITaskService _taskService) : ControllerBase
         return Ok(tasks);
     }
 
+    [HttpGet("/api/tasks{taskId:int}")]
+    async public Task<ActionResult<UserTaskResponseDto>> GetTask(int taskId)
+    {
+        var userId = GetCurrentPersonId();
+        var task = await _taskService.GetTask(userId, taskId);
+        return Ok(task);
+    }
+
+    [HttpPost("/api/tasks")]
+    async public Task<IActionResult> CreateTaskAsync([FromBody] CreateTaskDto createdto)
+    {
+        var userId = GetCurrentPersonId();
+        await _taskService.CreateTaskAsync(createdto.Description, createdto.Title, userId);
+        return NoContent();
+    }
 
 }
