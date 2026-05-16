@@ -12,6 +12,7 @@ public static class Extensions
     {
         //services.AddScoped<INoteRepository, NoteRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ITaskRepository, TaskRepository>();
         services.AddDbContext<AppContext>(options =>
         {
             //options.UseSqlite("Data Source=notes_persons.db");

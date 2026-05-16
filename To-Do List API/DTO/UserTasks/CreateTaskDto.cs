@@ -12,8 +12,11 @@ public class CreateTaskDto
     [MaxLength(1000)]
     public string? Description { get; set; }
 
-    //public Status? Status { get; set; } = Status.Medium;
-    //public TaskPriority? Priority { get; set; } = TaskPriority.Medium;
-    //public DateTime? DueDate { get; set; }
+    // ✅ ПРАВИЛЬНО: указываем полное имя с перечислением
+    public UserTaskStatus Status { get; set; } = UserTaskStatus.NotStarted;
+
+    // ✅ ПРАВИЛЬНО: приоритет по умолчанию
+    public Priority Priority { get; set; } = Priority.Medium;
+    public DateTime? DueDate { get; set; }
 }
 

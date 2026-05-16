@@ -36,6 +36,10 @@ public class TaskController(ITaskService _taskService) : ControllerBase
     {
         var userId = GetCurrentPersonId();
         var task = await _taskService.GetTask(userId, taskId);
+
+        if (task == null)
+            return NotFound();  // ← 404, а не 200
+
         return Ok(task);
     }
 
@@ -43,7 +47,25 @@ public class TaskController(ITaskService _taskService) : ControllerBase
     async public Task<IActionResult> CreateTaskAsync([FromBody] CreateTaskDto createdto)
     {
         var userId = GetCurrentPersonId();
-        await _taskService.CreateTaskAsync(createdto.Description, createdto.Title, userId);
+        await _taskService.CreateTaskAsync(userId, createdto.Description, createdto.Title, createdto.Status, 
+            createdto.Priority, createdto.DueDate);
+        return NoContent();
+    }
+
+    [HttpPut("/api/tasks/{taskId:int}")]
+    async public Task<IActionResult> UpdateTaskAsync(int taskId, [FromBody] UpdateTaskDto updatedto)
+    {
+        var userId = GetCurrentPersonId();
+        await _taskService.UpdateTaskAsync(userId, taskId, updatedto.Description, updatedto.Title,
+            updatedto.Status, updatedto.Priority, updatedto.DueDate);
+        return NoContent();
+    }
+
+    [HttpDelete("/api/tasks{taskId:int}")]
+    async public Task<IActionResult> DeleteTaskAsync(int taskId)
+    {
+        var userId = GetCurrentPersonId();
+        await _taskService.DeleteTaskAsync(userId, taskId);
         return NoContent();
     }
 

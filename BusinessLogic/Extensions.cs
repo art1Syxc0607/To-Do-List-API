@@ -11,6 +11,7 @@ public static class Extensions
     {
         serviceCollection.AddScoped<IJwtService, JwtService>();
         serviceCollection.AddScoped<IAuthService, AuthService>();
+        serviceCollection.AddScoped<ITaskService, TaskService>();
         //serviceCollection.AddScoped<INoteService, NoteService>();
 
         return serviceCollection;

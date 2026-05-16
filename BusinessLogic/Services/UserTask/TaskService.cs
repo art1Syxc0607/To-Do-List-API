@@ -14,13 +14,17 @@ public class TaskService : ITaskService
         _taskRepository = taskRepository;
     }
 
-    async public Task CreateTaskAsync(string? description, string title, int userId)
+    async public Task CreateTaskAsync(int userId, string? description, string title, UserTaskStatus status,
+        Priority priority, DateTime? dueDate)
     {
         var task = new UserTask 
         { 
             Title = title,
             Description = description,
             UserId = userId,
+            Priority = priority,
+            Status = status,
+            DueDate = dueDate,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
 
@@ -29,14 +33,42 @@ public class TaskService : ITaskService
         await _taskRepository.CreateTaskAsync(task);
     }
 
+    async public Task UpdateTaskAsync(int userId, int taskId, string? description, string? title, UserTaskStatus? status,
+       Priority? priority, DateTime? dueDate)
+    {
+        var task = await _taskRepository.GetTaskAsync(taskId);
+
+        if(task == null || task.UserId != userId)
+            throw new UnauthorizedAccessException("Это не ваша заметка или такой заметки нет");
+
+        task.Description = description;
+        task.Title = title;
+        task.Status = status;
+        task.DueDate = dueDate;
+        task.Priority = priority;
+        task.UpdatedAt = DateTime.UtcNow;
+
+        await _taskRepository.UpdateTaskAsync(task);
+    }
+
+    async public Task DeleteTaskAsync(int userId, int taskId)
+    {
+        var task = await _taskRepository.GetTaskAsync(taskId);
+
+        if (task == null || task.UserId != userId)
+            throw new UnauthorizedAccessException("Это не ваша заметка или такой заметки нет");
+
+        await _taskRepository.DeleteTaskAsync(task);
+    }
+
     async public Task<List<UserTask>?> GetTasks(int userId)
     {
-        return await _taskRepository.GetTasks(userId);
+        return await _taskRepository.GetTasksAsync(userId);
     }
 
     async public Task<UserTask?> GetTask(int userId, int taskId)
     {
-        var task = await _taskRepository.GetTask(taskId);
+        var task = await _taskRepository.GetTaskAsync(taskId);
 
         if(task == null || task.UserId !=  userId)
             throw new UnauthorizedAccessException("Это не ваша задача");

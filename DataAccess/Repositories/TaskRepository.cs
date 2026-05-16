@@ -16,7 +16,7 @@ public class TaskRepository : ITaskRepository
         await _context.SaveChangesAsync();
     }
 
-    async public Task<List<UserTask>?> GetTasks(int userId)
+    async public Task<List<UserTask>?> GetTasksAsync(int userId)
     {
         return await _context.Tasks
             .Where(n => n.UserId == userId) // ← Фильтр по пользователю
@@ -24,9 +24,20 @@ public class TaskRepository : ITaskRepository
             .ToListAsync();
     }
 
-    async public Task<UserTask?> GetTask(int taskId)
+    async public Task<UserTask?> GetTaskAsync(int taskId)
     {
         return await _context.Tasks.FirstOrDefaultAsync(n => n.Id == taskId);
+    }
+
+    public async Task UpdateTaskAsync(UserTask task)
+    {
+        _context.Tasks.Update(task);
+        await _context.SaveChangesAsync();
+    }
+    public async Task DeleteTaskAsync(UserTask task)
+    {
+        _context.Tasks.Remove(task);
+        await _context.SaveChangesAsync();
     }
 }
 
