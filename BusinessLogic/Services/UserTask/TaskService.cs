@@ -14,7 +14,7 @@ public class TaskService : ITaskService
         _taskRepository = taskRepository;
     }
 
-    async public Task CreateTaskAsync(int userId, string? description, string title, UserTaskStatus status,
+    async public Task CreateTaskAsync(int userId, int? categoryId, int? tagId, string? description, string title, UserTaskStatus status,
         Priority priority, DateTime? dueDate)
     {
         var task = new UserTask 
@@ -22,11 +22,14 @@ public class TaskService : ITaskService
             Title = title,
             Description = description,
             UserId = userId,
+            CategoryId = categoryId,
+            TagId = tagId,
             Priority = priority,
             Status = status,
             DueDate = dueDate,
             CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            UpdatedAt = DateTime.UtcNow,
+            IsCompleted = false,
 
         };
 
@@ -42,10 +45,14 @@ public class TaskService : ITaskService
             throw new UnauthorizedAccessException("Это не ваша заметка или такой заметки нет");
 
         task.Description = description;
-        task.Title = title;
-        task.Status = status;
+        // Обновляем только то, что пришло
+        if (title != null)
+            task.Title = title;
+        if (status.HasValue)           // ← проверка, что значение есть
+            task.Status = status.Value;
         task.DueDate = dueDate;
-        task.Priority = priority;
+        if (priority.HasValue)
+            task.Priority = priority.Value;
         task.UpdatedAt = DateTime.UtcNow;
 
         await _taskRepository.UpdateTaskAsync(task);

@@ -11,6 +11,8 @@ public class CreateTaskDto
 
     [MaxLength(1000)]
     public string? Description { get; set; }
+    public int? CategoryId { get; set; }
+    public int? TagId { get; set; }
 
     // ✅ ПРАВИЛЬНО: указываем полное имя с перечислением
     public UserTaskStatus Status { get; set; } = UserTaskStatus.NotStarted;

@@ -12,11 +12,11 @@ public class UserTask
     public DateTime? DueDate { get; set; }
     public bool IsCompleted { get; set; }
     public int UserId {  get; set; }
+    public int? CategoryId {  get; set; }
+    public int? TagId {  get; set; }
     public User? User { get; set; }
-    public UserTaskStatus? Status { get; set; }
-    public Priority? Priority {  get; set; }
-
-    
+    public UserTaskStatus Status { get; set; }
+    public Priority Priority {  get; set; }
 
 }
 
