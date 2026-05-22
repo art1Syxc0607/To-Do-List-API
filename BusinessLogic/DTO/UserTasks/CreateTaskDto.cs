@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using DataAccess.Entities;
 
-namespace To_Do_List_API.DTO.UserTasks;
+namespace BusinessLogic.DTO.UserTasks;
 
 public class CreateTaskDto
 {

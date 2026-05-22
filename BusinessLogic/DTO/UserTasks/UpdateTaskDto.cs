@@ -1,7 +1,7 @@
 ﻿using DataAccess.Entities;
 using System.ComponentModel.DataAnnotations;
 
-namespace To_Do_List_API.DTO.UserTasks;
+namespace BusinessLogic.DTO.UserTasks;
 
 public class UpdateTaskDto
 {
@@ -10,7 +10,8 @@ public class UpdateTaskDto
 
     [MaxLength(1000)]
     public string? Description { get; set; }
-
+    public int? CategoryId { get; set; }
+    public int? TagId { get; set; }
     public UserTaskStatus? Status { get; set; }
     public Priority? Priority { get; set; }
     public DateTime? DueDate { get; set; }

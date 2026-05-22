@@ -3,7 +3,7 @@ using BusinessLogic.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using To_Do_List_API.DTO.UserTasks;
+using BusinessLogic.DTO.UserTasks;
 
 namespace To_Do_List_API.Controllers;
 
@@ -47,7 +47,7 @@ public class TaskController(ITaskService _taskService) : ControllerBase
     async public Task<IActionResult> CreateTaskAsync([FromBody] CreateTaskDto createdto)
     {
         var userId = GetCurrentPersonId();
-        await _taskService.CreateTaskAsync(userId, createdto.Description, createdto.Title, createdto.Status, 
+        await _taskService.CreateTaskAsync(userId, createdto.CategoryId, createdto.TagId, createdto.Description, createdto.Title, createdto.Status, 
             createdto.Priority, createdto.DueDate);
         return NoContent();
     }
@@ -56,7 +56,7 @@ public class TaskController(ITaskService _taskService) : ControllerBase
     async public Task<IActionResult> UpdateTaskAsync(int taskId, [FromBody] UpdateTaskDto updatedto)
     {
         var userId = GetCurrentPersonId();
-        await _taskService.UpdateTaskAsync(userId, taskId, updatedto.Description, updatedto.Title,
+        await _taskService.UpdateTaskAsync(userId, taskId, updatedto.CategoryId, updatedto.TagId, updatedto.Description, updatedto.Title,
             updatedto.Status, updatedto.Priority, updatedto.DueDate);
         return NoContent();
     }

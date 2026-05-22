@@ -7,6 +7,8 @@ public class AppContext(DbContextOptions<AppContext> options) : DbContext(option
 {
     public DbSet<User> Users {  get; set; }
     public DbSet<UserTask> Tasks {  get; set; }
+    public DbSet<Category> Categories {  get; set; }
+    public DbSet<Tag> Tags {  get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

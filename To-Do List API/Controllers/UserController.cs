@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using To_Do_List_API.DTO.Auth;
+using BusinessLogic.DTO.Auth;
 //using BusinessLogic.Services;
 using BusinessLogic.Interfaces;
 

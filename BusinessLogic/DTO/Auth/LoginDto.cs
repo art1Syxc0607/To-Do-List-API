@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace To_Do_List_API.DTO.Auth
+namespace BusinessLogic.DTO.Auth
 {
     public class LoginDto
     {
