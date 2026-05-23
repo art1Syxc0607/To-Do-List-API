@@ -32,8 +32,7 @@ public class AppContext(DbContextOptions<AppContext> options) : DbContext(option
             entity.Property(u => u.PasswordHash)
                 .IsRequired()
                 .HasMaxLength(500);
-
-
+            
         });
 
         modelBuilder.Entity<UserTask>(entity =>
@@ -49,10 +48,44 @@ public class AppContext(DbContextOptions<AppContext> options) : DbContext(option
 
             // Связь с User
             entity.HasOne(t => t.User)
-                .WithMany(u => u.Tasks)
+                .WithMany(u => u.UserTasks)
                 .HasForeignKey(t => t.UserId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .IsRequired();
+                .HasPrincipalKey(u => u.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // связь с Category
+            entity.HasOne(t => t.Category)
+            .WithMany(c => c.Tasks)
+            .HasForeignKey(t => t.CategoryId)
+            .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<Category>(entity =>
+        {
+            // связь с User
+            entity.HasOne(c => c.User)
+                .WithMany(u => u.Categories)
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            
+
+        });
+
+        modelBuilder.Entity<Tag>(entity =>
+        {
+            // связь с User
+            entity.HasOne(u => u.User)
+            .WithMany(u => u.Tags)
+            .HasForeignKey(t => t.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+            // Связь многие-ко-многим с UserTask
+            entity.HasMany(t => t.UserTasks)
+            .WithMany(u => u.Tags);
+            
+            
 
         });
     }

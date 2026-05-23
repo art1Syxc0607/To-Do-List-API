@@ -28,7 +28,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<CategoryResponseDto>> CreateCategory(CreateCategoryDto dto)
+    public async Task<ActionResult<CategoryResponseDto>> CreateCategory([FromBody] CreateCategoryDto dto)
     {
         var userId = GetCurrentUserId();
         var category = await _categoryService.CreateAsync(userId, dto);
@@ -48,7 +48,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateCategory(int id, UpdateCategoryDto dto)
+    public async Task<IActionResult> UpdateCategory(int id, [FromBody] UpdateCategoryDto dto)
     {
         var userId = GetCurrentUserId();
         await _categoryService.UpdateAsync(userId, id, dto);

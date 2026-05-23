@@ -83,6 +83,33 @@ public class CategoryService : ICategoryService
         };
     }
 
+    public async Task UpdateAsync(int userId, int id, UpdateCategoryDto dto)
+    {
+        var category = await _categoryRepository.GetByIdAsync(id);
+
+        if(category == null || category.UserId != userId)
+            throw new UnauthorizedAccessException("Не выша котегория или нет такой");
+
+        if(dto.Name != null)
+            category.Name = dto.Name;
+
+        if(dto.Description != null)
+            category.Description = dto.Description;
+
+        await _categoryRepository.UpdateAsync(category);
+
+    }
+
+
+    public async Task DeleteAsync(int userId, int id)
+    {
+        var category = await _categoryRepository.GetByIdAsync(id);
+
+        if (category.UserId != userId)
+            throw new UnauthorizedAccessException("Категория не принадлежит пользователю");
+
+        await _categoryRepository.DeleteAsync(category);
+    }
 
 }
 

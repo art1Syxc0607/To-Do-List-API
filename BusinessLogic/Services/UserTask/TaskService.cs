@@ -14,7 +14,7 @@ public class TaskService : ITaskService
         _taskRepository = taskRepository;
     }
 
-    async public Task CreateTaskAsync(int userId, int? categoryId, int? tagId, string? description, string title, UserTaskStatus status,
+    async public Task CreateTaskAsync(int userId, int? categoryId, string? description, string title, UserTaskStatus status,
         Priority priority, DateTime? dueDate)
     {
         var task = new UserTask 
@@ -23,7 +23,6 @@ public class TaskService : ITaskService
             Description = description,
             UserId = userId,
             CategoryId = categoryId,
-            TagId = tagId,
             Priority = priority,
             Status = status,
             DueDate = dueDate,
@@ -36,21 +35,20 @@ public class TaskService : ITaskService
         await _taskRepository.CreateTaskAsync(task);
     }
 
-    async public Task UpdateTaskAsync(int userId, int taskId, int? categoryId, int? tagId, string? description, string? title, UserTaskStatus? status,
+    async public Task UpdateTaskAsync(int userId, int taskId, int? categoryId, string? description, string? title, UserTaskStatus? status,
        Priority? priority, DateTime? dueDate)
     {
         var task = await _taskRepository.GetTaskAsync(taskId);
 
         if(task == null || task.UserId != userId)
-            throw new UnauthorizedAccessException("Это не ваша заметка или такой заметки нет");
+            throw new UnauthorizedAccessException("Это не ваша задача или такой задачи нет");
 
         if(description != null)
             task.Description = description;
 
         if(categoryId != null)
             task.CategoryId = categoryId;
-        if(tagId != null)
-            task.TagId = tagId;
+
         // Обновляем только то, что пришло
         if (title != null)
             task.Title = title;

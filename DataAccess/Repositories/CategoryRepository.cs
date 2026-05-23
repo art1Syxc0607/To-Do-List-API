@@ -29,5 +29,27 @@ public class CategoryRepository : ICategoryRepository
             .FirstOrDefaultAsync(c => c.Id == id);
     }
 
-    // ... остальные методы
+    public async Task<Category> CreateAsync(Category category)
+    {
+        _context.Categories.Add(category);
+        await _context.SaveChangesAsync();
+        return category;
+    }
+
+    public async Task DeleteAsync(Category category)
+    {
+        _context.Categories.Remove(category);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(Category category)
+    {
+        _context.Categories.Update(category);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> ExistsAsync(int id, int userId)
+    {
+        return await _context.Categories.FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId) != null;
+    }
 }
