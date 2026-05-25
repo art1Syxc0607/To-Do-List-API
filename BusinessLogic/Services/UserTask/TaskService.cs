@@ -9,9 +9,11 @@ namespace BusinessLogic.Services;
 public class TaskService : ITaskService
 {
     private ITaskRepository _taskRepository;
-    public TaskService(ITaskRepository taskRepository)
+    private readonly ICategoryRepository _categoryRepository; 
+    public TaskService(ITaskRepository taskRepository, ICategoryRepository categoryRepository)
     {
         _taskRepository = taskRepository;
+        _categoryRepository = categoryRepository;
     }
 
     async public Task CreateTaskAsync(int userId, int? categoryId, string? description, string title, UserTaskStatus status,
@@ -35,19 +37,19 @@ public class TaskService : ITaskService
         await _taskRepository.CreateTaskAsync(task);
     }
 
-    async public Task UpdateTaskAsync(int userId, int taskId, int? categoryId, string? description, string? title, UserTaskStatus? status,
+    async public Task UpdateTaskAsync(int userId, int taskId, string? description, string? title, UserTaskStatus? status,
        Priority? priority, DateTime? dueDate)
     {
         var task = await _taskRepository.GetTaskAsync(taskId);
 
-        if(task == null || task.UserId != userId)
-            throw new UnauthorizedAccessException("Это не ваша задача или такой задачи нет");
+        if(task == null)
+            throw new InvalidOperationException("Такой задачи нет");
 
-        if(description != null)
+        if (task.UserId != userId)
+            throw new UnauthorizedAccessException("Это не ваша задача");
+
+        if (description != null)
             task.Description = description;
-
-        if(categoryId != null)
-            task.CategoryId = categoryId;
 
         // Обновляем только то, что пришло
         if (title != null)
