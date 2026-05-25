@@ -1,9 +1,10 @@
 ﻿//using BusinessLogic.Services;
+using BusinessLogic.DTO.UserTasks;
 using BusinessLogic.Interfaces;
+using DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using BusinessLogic.DTO.UserTasks;
 
 namespace To_Do_List_API.Controllers;
 
@@ -56,7 +57,7 @@ public class TaskController(ITaskService _taskService) : ControllerBase
     async public Task<IActionResult> UpdateTaskAsync(int taskId, [FromBody] UpdateTaskDto updatedto)
     {
         var userId = GetCurrentPersonId();
-        await _taskService.UpdateTaskAsync(userId, taskId, updatedto.CategoryId, updatedto.Description, updatedto.Title,
+        await _taskService.UpdateTaskAsync(userId, taskId, updatedto.Description, updatedto.Title,
             updatedto.Status, updatedto.Priority, updatedto.DueDate);
         return NoContent();
     }
@@ -66,6 +67,66 @@ public class TaskController(ITaskService _taskService) : ControllerBase
     {
         var userId = GetCurrentPersonId();
         await _taskService.DeleteTaskAsync(userId, taskId);
+        return NoContent();
+    }
+
+
+    // ========== УПРАВЛЕНИЕ КАТЕГОРИЕЙ ==========
+
+    // PUT /api/tasks/5/category/10
+    [HttpPut("{taskId}/category/{categoryId}")]
+    public async Task<IActionResult> SetCategory(int taskId, int categoryId)
+    {
+        var userId = GetCurrentPersonId();
+        await _taskService.SetCategoryAsync(userId, taskId, categoryId);
+        return NoContent();
+    }
+
+    // DELETE /api/tasks/5/category
+    [HttpDelete("{taskId}/category")]
+    public async Task<IActionResult> RemoveCategory(int taskId)
+    {
+        var userId = GetCurrentPersonId();
+        await _taskService.RemoveCategoryAsync(userId, taskId);
+        return NoContent();
+    }
+
+
+    // ========== УПРАВЛЕНИЕ ТЕГАМИ ==========
+
+    // POST /api/tasks/5/tags/10
+    [HttpPost("{taskId}/tags/{tagId}")]
+    public async Task<IActionResult> AddTag(int taskId, int tagId)
+    {
+        var userId = GetCurrentPersonId();
+        await _taskService.AddTagAsync(userId, taskId, tagId);
+        return NoContent();
+    }
+
+    // DELETE /api/tasks/5/tags/10
+    [HttpDelete("{taskId}/tags/{tagId}")]
+    public async Task<IActionResult> RemoveTag(int taskId, int tagId)
+    {
+        var userId = GetCurrentPersonId();
+        await _taskService.RemoveTagAsync(userId, taskId, tagId);
+        return NoContent();
+    }
+
+    // GET /api/tasks/5/tags
+    [HttpGet("{taskId}/tags")]
+    public async Task<ActionResult<List<Tag>>> GetTags(int taskId)
+    {
+        var userId = GetCurrentPersonId();
+        var tags = await _taskService.GetTagsAsync(userId, taskId);
+        return Ok(tags);
+    }
+
+    // PUT /api/tasks/5/tags
+    [HttpPut("{taskId}/tags")]
+    public async Task<IActionResult> SetTags(int taskId, [FromBody] List<int> tagIds)
+    {
+        var userId = GetCurrentPersonId();
+        await _taskService.SetTagsAsync(userId, taskId, tagIds);
         return NoContent();
     }
 

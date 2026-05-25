@@ -104,6 +104,8 @@ public class CategoryService : ICategoryService
     public async Task DeleteAsync(int userId, int id)
     {
         var category = await _categoryRepository.GetByIdAsync(id);
+        if (category == null)
+            throw new InvalidOperationException("Нет такой котегории");
 
         if (category.UserId != userId)
             throw new UnauthorizedAccessException("Категория не принадлежит пользователю");

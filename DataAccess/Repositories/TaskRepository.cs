@@ -29,6 +29,13 @@ public class TaskRepository : ITaskRepository
         return await _context.Tasks.FirstOrDefaultAsync(n => n.Id == taskId);
     }
 
+    public async Task<UserTask?> GetTaskWithTagsAsync(int taskId)
+    {
+        return await _context.Tasks
+            .Include(t => t.Tags)  // ← загружаем теги
+            .FirstOrDefaultAsync(t => t.Id == taskId);
+    }
+
     public async Task UpdateTaskAsync(UserTask task)
     {
         _context.Tasks.Update(task);
@@ -38,6 +45,21 @@ public class TaskRepository : ITaskRepository
     {
         _context.Tasks.Remove(task);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<UserTask?> GetTaskWithCategoryAsync(int taskId)
+    {
+        return await _context.Tasks
+            .Include(t => t.Category)
+            .FirstOrDefaultAsync(t => t.Id == taskId);
+    }
+
+    public async Task<UserTask?> GetTaskWithAllAsync(int taskId)
+    {
+        return await _context.Tasks
+            .Include(t => t.Category)
+            .Include(t => t.Tags)
+            .FirstOrDefaultAsync(t => t.Id == taskId);
     }
 }
 
