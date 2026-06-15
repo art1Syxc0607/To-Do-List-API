@@ -54,19 +54,20 @@ public class CategoryService : ICategoryService
             Name = c.Name,
             Description = c.Description,
             Color = c.Color,
-            CreatedAt = c.CreatedAt
+            CreatedAt = c.CreatedAt,
+            UpdatedAt = c.UpdatedAt
         }).ToList();
     }
 
 
-    public async Task<CategoryResponseDto?> GetByIdAsync(int userId, int categoryId)
+    public async Task<CategoryResponseDto?> GetByIdAsync(int categoryId, int userId)
     {
         // 1. Получаем категорию
         var category = await _categoryRepository.GetByIdAsync(categoryId);
 
         // 2. Проверяем, существует ли
         if (category == null)
-            return null;
+            throw new UnauthorizedAccessException("Such Категория insn't here");
 
         // 3. Проверяем, принадлежит ли пользователю (БИЗНЕС-ПРАВИЛО!)
         if (category.UserId != userId)

@@ -10,5 +10,5 @@ public interface ITagRepository
     Task UpdateAsync(Tag tag);
     Task DeleteAsync(Tag tag);
     Task<bool> ExistsAsync(int id);
-    Task<List<Tag>> GetByIdsAsync(List<int> ids, int userId);
+    Task<List<Tag>> GetByIdsAsync(ICollection<int> ids, int userId);
 }

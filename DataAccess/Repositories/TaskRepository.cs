@@ -18,15 +18,28 @@ public class TaskRepository : ITaskRepository
 
     async public Task<List<UserTask>?> GetTasksAsync(int userId)
     {
+        //return await _context.Tasks
+        //    .Where(n => n.UserId == userId) // ← Фильтр по пользователю
+        //    .OrderByDescending(n => n.CreatedAt)
+        //    .ToListAsync();
+
         return await _context.Tasks
-            .Where(n => n.UserId == userId) // ← Фильтр по пользователю
-            .OrderByDescending(n => n.CreatedAt)
+            .Include(t => t.Tags)        // Загружаем теги (многие-ко-многим)
+            //.Include(t => t.Category)    // Загружаем категорию (один-ко-многим)
+            //.Include(t => t.User)        // Загружаем пользователя (один-ко-многим)
+            .Where(t => t.UserId == userId)
+            .OrderByDescending(t => t.CreatedAt)
             .ToListAsync();
     }
 
     async public Task<UserTask?> GetTaskAsync(int taskId)
     {
-        return await _context.Tasks.FirstOrDefaultAsync(n => n.Id == taskId);
+        return await _context.Tasks
+            .Include(t => t.Tags)        // Загружаем теги (многие-ко-многим)
+            //.Include(t => t.Category)    // Загружаем категорию (один-ко-многим)
+            //.Include(t => t.User)        // Загружаем пользователя (один-ко-многим)
+            .FirstOrDefaultAsync(n => n.Id == taskId);
+            
     }
 
     public async Task<UserTask?> GetTaskWithTagsAsync(int taskId)

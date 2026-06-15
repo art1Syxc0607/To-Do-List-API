@@ -51,8 +51,10 @@ public class TagRepository : ITagRepository
         return await _context.Tags.AnyAsync(t => t.Id == id);
     }
 
-    public async Task<List<Tag>> GetByIdsAsync(List<int> ids, int userId)
+    public async Task<List<Tag>> GetByIdsAsync(ICollection<int> ids, int userId)
     {
+        if (ids == null || ids.Count == 0)
+            return new List<Tag>();
         return await _context.Tags
             .Where(t => ids.Contains(t.Id) && t.UserId == userId)
             .ToListAsync();

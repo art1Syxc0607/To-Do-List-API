@@ -1,5 +1,6 @@
 ﻿//using BusinessLogic.Services;
 using BusinessLogic.DTO.UserTasks;
+using BusinessLogic.DTO.Tag;
 using BusinessLogic.Interfaces;
 using DataAccess.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -28,7 +29,7 @@ public class TaskController(ITaskService _taskService) : ControllerBase
     async public Task<ActionResult<List<UserTaskResponseDto>>> GetTasks()
     {
         var userId = GetCurrentPersonId();
-        var tasks = await _taskService.GetTasks(userId);
+        var tasks = await _taskService.GetTasksAsync(userId);
         return Ok(tasks);
     }
 
@@ -36,7 +37,7 @@ public class TaskController(ITaskService _taskService) : ControllerBase
     async public Task<ActionResult<UserTaskResponseDto>> GetTask(int taskId)
     {
         var userId = GetCurrentPersonId();
-        var task = await _taskService.GetTask(userId, taskId);
+        var task = await _taskService.GetTaskAsync(userId, taskId);
 
         if (task == null)
             return NotFound();  // ← 404, а не 200
@@ -48,7 +49,7 @@ public class TaskController(ITaskService _taskService) : ControllerBase
     async public Task<IActionResult> CreateTaskAsync([FromBody] CreateTaskDto createdto)
     {
         var userId = GetCurrentPersonId();
-        await _taskService.CreateTaskAsync(userId, createdto.CategoryId, createdto.Description, createdto.Title, createdto.Status, 
+        await _taskService.CreateTaskAsync(userId, createdto.CategoryId, createdto.TagsId, createdto.Description, createdto.Title, createdto.Status, 
             createdto.Priority, createdto.DueDate);
         return NoContent();
     }
@@ -114,7 +115,7 @@ public class TaskController(ITaskService _taskService) : ControllerBase
 
     // GET /api/tasks/5/tags
     [HttpGet("{taskId}/tags")]
-    public async Task<ActionResult<List<Tag>>> GetTags(int taskId)
+    public async Task<ActionResult<List<TagResponseDto>>> GetTags(int taskId)
     {
         var userId = GetCurrentPersonId();
         var tags = await _taskService.GetTagsAsync(userId, taskId);

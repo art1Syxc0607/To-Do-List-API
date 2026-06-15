@@ -7,5 +7,6 @@ public class CategoryResponseDto
     public string? Description { get; set; }
     public string? Color { get; set; }
     public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
     public int TasksCount { get; set; }  // опционально
 }
