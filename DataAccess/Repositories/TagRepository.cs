@@ -21,6 +21,13 @@ public class TagRepository : ITagRepository
             .ToListAsync();
     }
 
+    public async Task<List<int>> GetUserTagsIdAsync(int userId)
+    {
+        return await _context.Tags
+            .Where(t => t.UserId == userId)
+            .Select(t => t.Id)
+            .ToListAsync();
+    }
     public async Task<Tag?> GetByIdAsync(int id)
     {
         return await _context.Tags

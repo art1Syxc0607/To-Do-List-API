@@ -291,5 +291,58 @@ public class TaskService : ITaskService
         }).ToList();
     }
 
+    // ========== Фильтрация и Поиск ==========
+
+    async public Task<List<UserTaskResponseDto>?> GetFilteredTasksAsync(int userId, UserTaskFilterDto taskfilterdto)
+    {
+        if (taskfilterdto.CategoryId.HasValue)
+        {
+            var category = await _categoryRepository.GetByIdAsync(taskfilterdto.CategoryId.Value);
+
+            if (category == null)
+                throw new InvalidOperationException($"Category with id {taskfilterdto.CategoryId} not found");
+
+            if (category.UserId != userId)
+                throw new UnauthorizedAccessException($"No access to category {category.Id}");
+        }
+
+
+        if (taskfilterdto.TagIds != null)
+            foreach (var tagId in taskfilterdto.TagIds)
+            {
+                var tag = await _tagRepository.GetByIdAsync(tagId);
+                if (tag == null || tag.UserId != userId)
+                    throw new UnauthorizedAccessException($"Тег {tagId} недоступен");
+            }
+
+
+        var tasks = await _taskRepository.GetFilteredTasksAsync(userId, taskfilterdto.Status, taskfilterdto.Priority,
+            taskfilterdto.Search, taskfilterdto.DueDateRange, taskfilterdto.CategoryId, taskfilterdto.TagIds);
+
+        return tasks.Select(x => new UserTaskResponseDto
+        {
+            Title = x.Title,
+            Description = x.Description,
+            Id = x.Id,
+            UserId = userId,
+            CategoryId = x.CategoryId,
+            CreateTime = x.CreatedAt,
+            UpdateTime = x.UpdatedAt,
+            IsCompleted = x.IsCompleted,
+            Status = x.Status,
+            Priority = x.Priority,
+            Tags = x.Tags.Select(t => new TagResponseDto
+            {
+                Id = t.Id,
+                Name = t.Name,
+                CreatedAt = t.CreatedAt,
+                UpdatedAt = t.UpdatedAt,
+                //UserId = userId,
+
+            }).ToList()
+
+        }).ToList();
+    }
+
 }
 

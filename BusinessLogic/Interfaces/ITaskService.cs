@@ -25,5 +25,8 @@ public interface ITaskService
     Task RemoveTagAsync(int userId, int taskId, int tagId);
     Task SetTagsAsync(int userId, int taskId, List<int> tagIds);
     Task<List<TagResponseDto>> GetTagsAsync(int userId, int taskId);
+
+    // ========== Фильтрация и Поиск ==========
+    Task<List<UserTaskResponseDto>?> GetFilteredTasksAsync(int userId, UserTaskFilterDto taskfilterdto);
 }
 

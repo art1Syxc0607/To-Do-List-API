@@ -131,4 +131,13 @@ public class TaskController(ITaskService _taskService) : ControllerBase
         return NoContent();
     }
 
+    // ========== Фильтрация и Поиск ==========
+    [HttpGet("/api/tasks/filter")]
+    public async Task<IActionResult> GetTasksFilter([FromQuery] UserTaskFilterDto taskfilterdto)
+    {
+        int userId = GetCurrentPersonId();
+        var tasks = await _taskService.GetFilteredTasksAsync(userId, taskfilterdto);
+        return Ok(tasks);
+    }
+
 }

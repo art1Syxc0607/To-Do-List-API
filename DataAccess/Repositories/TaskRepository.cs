@@ -74,5 +74,21 @@ public class TaskRepository : ITaskRepository
             .Include(t => t.Tags)
             .FirstOrDefaultAsync(t => t.Id == taskId);
     }
+
+    public async Task<List<UserTask>?> GetFilteredTasksAsync(int userId, UserTaskStatus? status, Priority? priority, string? search,
+         string? dueDateRange, int? categoryId, List<int>? tagsId)
+    {
+
+        return await _context.Tasks.Include(t => t.Tags)
+            .WhereIf(status != null, t => t.Status == status)
+            .WhereIf(priority != null, t => t.Priority == priority)
+            .WhereIf(search != null, t => t.Title.Contains(search) || (t.Description != null && 
+            t.Description.Contains(search)))
+
+            .WhereIf(categoryId != null, t => t.CategoryId == categoryId)
+            .WhereIf(tagsId != null && tagsId.Any(),
+    t => tagsId.All(t_Id => t.Tags.Any(tag => tag.Id == t_Id)))
+            .ToListAsync();
+    }
 }
 
