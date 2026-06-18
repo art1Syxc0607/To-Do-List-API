@@ -55,6 +55,15 @@ public class TaskService : ITaskService
             }
         }
 
+        // Проверка статуса
+        if (!Enum.IsDefined(typeof(UserTaskStatus), status))
+            throw new InvalidOperationException($"Недопустимый статус: {status}");
+
+        // Проверка приоритета
+        if (!Enum.IsDefined(typeof(Priority), priority))
+            throw new InvalidOperationException($"Недопустимый приоритет: {priority}");
+
+
         // 4. Создание задачи
         var task = new UserTask
         {
@@ -130,6 +139,7 @@ public class TaskService : ITaskService
             IsCompleted = x.IsCompleted,
             Status = x.Status,
             Priority = x.Priority,
+            DueDate = x.DueDate,
             Tags = x.Tags.Select(t => new TagResponseDto
             {
                 Id = t.Id,
@@ -162,6 +172,7 @@ public class TaskService : ITaskService
             IsCompleted = task.IsCompleted,
             Status = task.Status,
             Priority = task.Priority,
+            DueDate = task.DueDate,
             Tags = task.Tags.Select(t => new TagResponseDto
             {
                 Id = t.Id,
@@ -331,6 +342,7 @@ public class TaskService : ITaskService
             IsCompleted = x.IsCompleted,
             Status = x.Status,
             Priority = x.Priority,
+            DueDate = x.DueDate,
             Tags = x.Tags.Select(t => new TagResponseDto
             {
                 Id = t.Id,

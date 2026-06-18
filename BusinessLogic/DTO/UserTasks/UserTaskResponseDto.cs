@@ -19,6 +19,7 @@ public class UserTaskResponseDto
     public DateTime CreateTime { get; set; }
     [Required]
     public DateTime UpdateTime { get; set; }
+    public DateTime? DueDate { get; set; }
     [Required]
     public bool IsCompleted { get; set; }
     [Required]

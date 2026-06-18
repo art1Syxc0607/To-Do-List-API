@@ -1,6 +1,7 @@
 ﻿using DataAccess.Entities;
 using DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DataAccess.Repositories;
 
@@ -88,7 +89,12 @@ public class TaskRepository : ITaskRepository
             .WhereIf(categoryId != null, t => t.CategoryId == categoryId)
             .WhereIf(tagsId != null && tagsId.Any(),
     t => tagsId.All(t_Id => t.Tags.Any(tag => tag.Id == t_Id)))
+            .ApplyDueDateFilter(dueDateRange)
             .ToListAsync();
     }
+
+
+
+
 }
 
