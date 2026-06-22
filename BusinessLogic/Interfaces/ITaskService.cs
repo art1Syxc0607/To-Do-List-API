@@ -26,7 +26,8 @@ public interface ITaskService
     Task SetTagsAsync(int userId, int taskId, List<int> tagIds);
     Task<List<TagResponseDto>> GetTagsAsync(int userId, int taskId);
 
-    // ========== Фильтрация и Поиск ==========
-    Task<List<UserTaskResponseDto>?> GetFilteredTasksAsync(int userId, UserTaskFilterDto taskfilterdto);
+    // ========== Фильтрация и Поиск, Сортировка ==========
+    Task<List<UserTaskResponseDto>?> GetFilteredTasksAsync(int userId, UserTaskFilterDto taskfilterdto, 
+        string? sortBy, bool sortDesc);
 }
 

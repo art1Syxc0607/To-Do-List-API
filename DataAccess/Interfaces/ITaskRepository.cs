@@ -16,9 +16,9 @@ public interface ITaskRepository
     Task<UserTask?> GetTaskWithAllAsync(int taskId);
 
 
-    // ========== Фильтрация и Поиск ==========
+    // ========== Фильтрация и Поиск, Сортировка ==========
 
     Task<List<UserTask>?> GetFilteredTasksAsync(int userId, UserTaskStatus? Status, Priority? Priority, string? Search, 
-         string? DueDateRange, int? CategoryId, List<int>? TagsId);
+         string? DueDateRange, int? CategoryId, List<int>? TagsId, string? sortBy = "createdAt", bool sortDesc = true);
 }
 

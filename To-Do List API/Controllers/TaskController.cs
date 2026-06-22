@@ -131,12 +131,15 @@ public class TaskController(ITaskService _taskService) : ControllerBase
         return NoContent();
     }
 
-    // ========== Фильтрация и Поиск ==========
+    // ========== Фильтрация и Поиск, Сортировка ==========
     [HttpGet("/api/tasks/filter")]
-    public async Task<IActionResult> GetTasksFilter([FromQuery] UserTaskFilterDto taskfilterdto)
+    public async Task<IActionResult> GetTasksFilter(
+    [FromQuery] UserTaskFilterDto taskfilterdto,
+    [FromQuery] string? sortBy = "createdAt",
+    [FromQuery] bool sortDesc = true)
     {
         int userId = GetCurrentPersonId();
-        var tasks = await _taskService.GetFilteredTasksAsync(userId, taskfilterdto);
+        var tasks = await _taskService.GetFilteredTasksAsync(userId, taskfilterdto, sortBy, sortDesc);
         return Ok(tasks);
     }
 

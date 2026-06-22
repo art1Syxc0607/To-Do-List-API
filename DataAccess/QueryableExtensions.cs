@@ -32,6 +32,42 @@ string? dueDateRange)
         };
     }
 
+
+    public static IQueryable<UserTask> ApplySorting(
+       this IQueryable<UserTask> query,
+       string? sortBy,
+       bool sortDesc = true)
+    {
+        return (sortBy?.ToLower() ?? "createdAt") switch
+        {
+            "title" => sortDesc
+                ? query.OrderByDescending(t => t.Title)
+                : query.OrderBy(t => t.Title),
+
+            "status" => sortDesc
+                ? query.OrderByDescending(t => t.Status)
+                : query.OrderBy(t => t.Status),
+
+            "priority" => sortDesc
+                ? query.OrderByDescending(t => t.Priority)
+                : query.OrderBy(t => t.Priority),
+
+            "dueDate" => sortDesc
+                ? query.OrderByDescending(t => t.DueDate)
+                : query.OrderBy(t => t.DueDate),
+
+            "updatedAt" => sortDesc
+                ? query.OrderByDescending(t => t.UpdatedAt)
+                : query.OrderBy(t => t.UpdatedAt),
+
+            "createdAt" => sortDesc
+                ? query.OrderByDescending(t => t.CreatedAt)
+                : query.OrderBy(t => t.CreatedAt),
+
+            _ => query.OrderByDescending(t => t.CreatedAt) // по умолчанию
+        };
+    }
+
 }
 
 

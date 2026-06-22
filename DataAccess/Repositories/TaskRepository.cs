@@ -77,20 +77,25 @@ public class TaskRepository : ITaskRepository
     }
 
     public async Task<List<UserTask>?> GetFilteredTasksAsync(int userId, UserTaskStatus? status, Priority? priority, string? search,
-         string? dueDateRange, int? categoryId, List<int>? tagsId)
+         string? dueDateRange, int? categoryId, List<int>? tagsId, string? sortBy = "createdAt", bool sortDesc = true)
     {
 
-        return await _context.Tasks.Include(t => t.Tags)
+        var query = _context.Tasks.Include(t => t.Tags)
             .WhereIf(status != null, t => t.Status == status)
             .WhereIf(priority != null, t => t.Priority == priority)
-            .WhereIf(search != null, t => t.Title.Contains(search) || (t.Description != null && 
+            .WhereIf(search != null, t => t.Title.Contains(search) || (t.Description != null &&
             t.Description.Contains(search)))
 
             .WhereIf(categoryId != null, t => t.CategoryId == categoryId)
             .WhereIf(tagsId != null && tagsId.Any(),
     t => tagsId.All(t_Id => t.Tags.Any(tag => tag.Id == t_Id)))
-            .ApplyDueDateFilter(dueDateRange)
-            .ToListAsync();
+            .ApplyDueDateFilter(dueDateRange);
+            
+
+        // ✅ Применяем сортировку
+        query = query.ApplySorting(sortBy, sortDesc);
+
+        return await query.ToListAsync();
     }
 
 

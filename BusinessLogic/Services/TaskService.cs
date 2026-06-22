@@ -302,9 +302,10 @@ public class TaskService : ITaskService
         }).ToList();
     }
 
-    // ========== Фильтрация и Поиск ==========
+    // ========== Фильтрация и Поиск, Сортировка ==========
 
-    async public Task<List<UserTaskResponseDto>?> GetFilteredTasksAsync(int userId, UserTaskFilterDto taskfilterdto)
+    async public Task<List<UserTaskResponseDto>?> GetFilteredTasksAsync(int userId, UserTaskFilterDto taskfilterdto, 
+        string? sortBy = "createdAt", bool sortDesc = true)
     {
         if (taskfilterdto.CategoryId.HasValue)
         {
@@ -328,7 +329,8 @@ public class TaskService : ITaskService
 
 
         var tasks = await _taskRepository.GetFilteredTasksAsync(userId, taskfilterdto.Status, taskfilterdto.Priority,
-            taskfilterdto.Search, taskfilterdto.DueDateRange, taskfilterdto.CategoryId, taskfilterdto.TagIds);
+            taskfilterdto.Search, taskfilterdto.DueDateRange, taskfilterdto.CategoryId, taskfilterdto.TagIds,
+            sortBy, sortDesc);
 
         return tasks.Select(x => new UserTaskResponseDto
         {
